@@ -1,0 +1,22 @@
+body {
+	font-family: sans-serif;
+	background-color: #eee;	
+}
+
+#fractal, #generate {
+	display: block;
+	margin-top: 1em;
+}
+
+#formula {
+	width: 30vw;
+}
+
+fieldset {
+	float: left;
+}
+
+fieldset > label {
+	display: block;
+	margin-top: 1em;
+}

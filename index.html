@@ -1,0 +1,31 @@
+<!doctype html>
+
+<title>Canvas Fractal Generator</title>
+
+<link rel="stylesheet" type="text/css" href="style.css">
+
+<fieldset>
+	<legend>Fractal Options</legend>
+	
+	<label for=formula>Formula (javascript, complex numbers as arrays):</label>
+	<input id=formula></input>
+	
+	<label for=iterations>Max iterations:</label>
+	<input id=iterations type=number></input>
+	
+	<label for=zoom>Value multiplier (closer to zero = more zoomed in):</label>
+	<input id=zoom type=number step=any></input>
+	
+	<label for=xshift>x-shift:</label>
+	<input id=xshift type=number></input>
+	
+	<label for=yshift>y-shift:</label>
+	<input id=yshift type=number></input>
+	
+	<button id=generate>Generate</button>
+	
+</fieldset>
+
+<canvas id=fractal width=500 height=500></canvas>
+
+<script type="text/javascript" src="index.js"></script>

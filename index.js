@@ -1,11 +1,12 @@
 let canvas = window.fractal;
 let ctx = canvas.getContext("2d");
 window.generate.addEventListener("click", update);
+window.generatezoom.addEventListener("click", zoomIn);
 window.formula.value = "add(pow(z, 2), c)";
 window.iterations.value = 50;
 window.zoom.value = 1;
-window.xshift.value = 0;
-window.yshift.value = 0;
+window.xpos.value = 0;
+window.ypos.value = 0;
 
 function multiply(c1, c2) {
 	if (typeof(c1) == "object" && typeof(c2) == "object") {
@@ -17,12 +18,13 @@ function multiply(c1, c2) {
 }
 let mul = multiply
 
-function pow(c, n) {
+function power(c, n) {
 	for (let i = 1; i < n; i++) {
 		c = multiply(c, c);
 	}
 	return c
 }
+let pow = power;
 
 function add(c1, c2) {
 	if (typeof(c1) == "object" && typeof(c2) == "object") {
@@ -34,17 +36,78 @@ function add(c1, c2) {
 }
 
 function update(e) {
-	draw();
+	draw(true);
 }
 
-function draw() {
+function flipbook(imgs) {
+	if (imgs.length > 0) {
+		ctx.putImageData(imgs[0], 0, 0);
+		imgs.shift();
+		requestAnimationFrame(function() {
+			flipbook(imgs);
+		});
+	}
+}
+
+function zoomIn(e) {
+	let imgs = [];
+	for (let i = 0; i < 60; i++) {
+		imgs.push(draw());
+		window.zoom.value *= 1.5;
+	}
+	flipbook(imgs);
+}
+
+function getColor(angle) {
+    let h2 = angle / 60;
+    let s2 = 1;
+	let v2 = 1;
+    let c = v2 * s2;
+    let x = c * (1 - Math.abs((h2 % 2) - 1));
+    let m = v2 - c;
+	let r, g, b;
+	if (h2 < 1) {
+		r = c;
+		g = x;
+		b = 0;
+	} else if (h2 < 2) {
+		r = x;
+		g = c;
+		b = 0;
+	} else if (h2 < 3) {
+		r = 0;
+		g = c;
+		b = x;
+	} else if (h2 < 4) {
+		r = 0;
+		g = x;
+		b = c;
+	} else if (h2 < 5) {
+		r = x;
+		g = 0;
+		b = c;
+	} else if (h2 <= 6) {
+		r = c;
+		g = 0;
+		b = x;
+	}
+	r = (r + m) * 255
+	g = (g + m) * 255
+	b = (b + m) * 255
+	return [r, g, b]
+}
+
+function draw(updateDisplay) {
+	if (updateDisplay === undefined) {
+		updateDisplay = false;
+	}
 	let width = canvas.width;
 	let height = canvas.height;
 	let formula = window.formula.value;
 	let iterations = window.iterations.value;
-	let zoom = Number(window.zoom.value);
-	let xshift = Number(window.xshift.value);
-	let yshift = Number(window.yshift.value);
+	let zoom = 1 / Number(window.zoom.value);
+	let xshift = Number(window.xpos.value);
+	let yshift = -Number(window.ypos.value);
 	
     let imageData = ctx.getImageData(0, 0, width, height);
     let buf = new ArrayBuffer(imageData.data.length);
@@ -67,13 +130,12 @@ function draw() {
 				i++;
 			}
 			
-			r = 0;
-			g = 0;
-			b = 0;
-			
 			if (i < iterations) {
-				n = i / iterations * 255;
-				r = n;
+				[r, g, b] = getColor(360 * i / iterations);
+			} else {
+				r = 0;
+				g = 0;
+				b = 0;
 			}
 			
 			data[y * width + x] = (255 << 24) | (b << 16) | (g << 8) | r;
@@ -82,8 +144,11 @@ function draw() {
 	}
 	
 	imageData.data.set(buf8);
-	ctx.putImageData(imageData, 0, 0);
 	
+	if (updateDisplay) {
+		ctx.putImageData(imageData, 0, 0);
+	}
+	return imageData;
 }
 
-draw();
+draw(true);

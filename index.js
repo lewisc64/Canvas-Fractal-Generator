@@ -30,7 +30,7 @@ function add(c1, c2) {
 	if (typeof(c1) == "object" && typeof(c2) == "object") {
 		return [c1[0] + c2[0], c1[1] + c2[1]];
 	} else if (typeof(c1) == "object" && typeof(c2) == "number") {
-		return [c1[0] + c2, c1[1] + c2]
+		return [c1[0] + c2, c1[1]]
 	}
 	return add(c2, c1);
 }

@@ -1,18 +1,22 @@
 body {
 	font-family: sans-serif;
-	background-color: #eee;	
+	background-color: #ddd;	
 }
 
-#fractal, #generate {
-	display: block;
+#fractal {
 	margin-top: 1em;
+}
+
+#generate {
+	float: clear-all;
+	display: block;
 }
 
 #formula {
 	width: 30vw;
 }
 
-fieldset {
+main {
 	float: left;
 }
 

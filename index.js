@@ -8,6 +8,10 @@ window.zoom.value = 1;
 window.xpos.value = 0;
 window.ypos.value = 0;
 
+window.hueshift.value = 0;
+window.checkdrawblack.checked = true;
+window.checksmooth.checked = true;
+
 function multiply(c1, c2) {
 	if (typeof(c1) == "object" && typeof(c2) == "object") {
 		return [(c1[0] * c2[0]) - (c1[1] * c2[1]), (c1[0] * c2[1]) + (c1[1] * c2[0])]
@@ -35,6 +39,10 @@ function add(c1, c2) {
 	return add(c2, c1);
 }
 
+function magnitude(c) {
+	return Math.sqrt(c[0] ** 2 + c[1] ** 2);
+}
+
 function update(e) {
 	draw(true);
 }
@@ -59,6 +67,7 @@ function zoomIn(e) {
 }
 
 function getColor(angle) {
+	angle = angle % 360;
     let h2 = angle / 60;
     let s2 = 1;
 	let v2 = 1;
@@ -109,12 +118,17 @@ function draw(updateDisplay) {
 	let xshift = Number(window.xpos.value);
 	let yshift = -Number(window.ypos.value);
 	
+	let hueshift = Number(window.hueshift.value);
+	let drawblack = window.checkdrawblack.checked;
+	let smoothshading = window.checksmooth.checked;
+	
     let imageData = ctx.getImageData(0, 0, width, height);
     let buf = new ArrayBuffer(imageData.data.length);
     let buf8 = new Uint8ClampedArray(buf);
     let data = new Uint32Array(buf);
 	
-	let z, c, i, r, g, b, n;
+	let z, c, i, r, g, b;
+	let smoothcolor;
 	
 	for (let x = 0; x < width; x++) {
 		for (let y = 0; y < height; y++) {
@@ -124,14 +138,23 @@ function draw(updateDisplay) {
 			z = add(z, [xshift, yshift]);
 			c = z.slice();
 			
+			smoothcolor = Math.exp(-magnitude(z));
+			
 			i = 0;
 			while (i < iterations && z[0] ** 2 + z[1] ** 2 <= 4) {
 				z = eval(formula);
+				
+				smoothcolor += Math.exp(-magnitude(z));
+				
 				i++;
 			}
 			
-			if (i < iterations) {
-				[r, g, b] = getColor(360 * i / iterations);
+			if (i < iterations || !drawblack) {
+				if (smoothshading) {
+					[r, g, b] = getColor(hueshift + smoothcolor / iterations * 360 * 2);
+				} else {
+					[r, g, b] = getColor(hueshift + i / iterations * 360);
+				}
 			} else {
 				r = 0;
 				g = 0;

@@ -4,27 +4,44 @@
 
 <link rel="stylesheet" type="text/css" href="style.css">
 
-<fieldset>
-	<legend>Fractal Options</legend>
-	
-	<label for=formula>Formula (javascript, complex numbers as arrays):</label>
-	<input id=formula></input>
-	
-	<label for=iterations>Max iterations:</label>
-	<input id=iterations type=number></input>
-	
-	<label for=zoom>Zoom factor:</label>
-	<input id=zoom type=number step=any></input>
-	
-	<label for=xpos>center x:</label>
-	<input id=xpos type=number step=any></input>
-	
-	<label for=ypos>center y:</label>
-	<input id=ypos type=number step=any></input>
-	
-	<button id=generate>Generate</button>
-	<button id=generatezoom style="display: none">Begin Zoom</button>
-</fieldset>
+<main>
+
+	<fieldset>
+		<legend>Fractal Generation Options</legend>
+		
+		<label for=formula>Formula (javascript, complex numbers as arrays):</label>
+		<input id=formula></input>
+		
+		<label for=iterations>Max iterations:</label>
+		<input id=iterations type=number></input>
+		
+		<label for=zoom>Zoom factor:</label>
+		<input id=zoom type=number step=any></input>
+		
+		<label for=xpos>center x:</label>
+		<input id=xpos type=number step=any></input>
+		
+		<label for=ypos>center y:</label>
+		<input id=ypos type=number step=any></input>
+	</fieldset>
+
+	<fieldset>
+		<legend>Fractal Aesthetic Options</legend>
+		
+		<label for=hueshift>Hue shift (degrees):</label>
+		<input id=hueshift type=number step=any min=0 max=360></input>
+		
+		<label for=checkdrawblack>Draw black?:</label>
+		<input id=checkdrawblack type=checkbox></input>
+		
+		<label for=checksmooth>Smooth shading?:</label>
+		<input id=checksmooth type=checkbox></input>
+	</fieldset>
+
+</main>
+
+<button id=generate>Generate</button>
+<button id=generatezoom style="display: none">Begin Zoom</button>
 
 <canvas id=fractal width=500 height=500></canvas>
 

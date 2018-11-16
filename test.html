@@ -1,0 +1,22 @@
+<!doctype html>
+
+<title>Canvas Fractal Generator</title>
+
+<canvas id=fractal width=1920 height=1080 style="display: none"></canvas>
+
+<script type="text/javascript" src="fractal.js"></script>
+<script>
+draw({
+	context: window.fractal.getContext("2d"),
+	formula: "add(pow(z, 2), c)",
+	iterations: 100,
+	zoom: 4,
+	xshift: 0,
+	yshift: 0,
+	hueshift: 180,
+	drawblack: true,
+	smoothshading: true,
+	drawtocanvas: true,
+});
+window.location.replace(window.fractal.toDataURL("image/png"));
+</script>

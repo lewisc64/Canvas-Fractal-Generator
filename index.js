@@ -1,7 +1,12 @@
 let canvas = window.fractal;
 let context = canvas.getContext("2d");
+
+for (let elem of document.querySelectorAll("fieldset")) {
+  elem.addEventListener("change", update);
+}
 window.generate.addEventListener("click", update);
 window.generatezoom.addEventListener("click", zoomIn);
+
 window.formula.value = "add(pow(z, 2), c)";
 window.iterations.value = 50;
 window.zoom.value = 1;

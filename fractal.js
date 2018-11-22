@@ -112,7 +112,7 @@ function drawPortion(options, bound_x, bound_y, bound_width, bound_height) {
         b = 0;
       }
 
-      data[y * width + x] = (255 << 24) | (b << 16) | (g << 8) | r;
+      data[(y - bound_y) * bound_width + x - bound_x] = (255 << 24) | (b << 16) | (g << 8) | r;
 
     }
   }
@@ -120,21 +120,24 @@ function drawPortion(options, bound_x, bound_y, bound_width, bound_height) {
   return imageData;
 }
 
-function draw(options, row) {
+function draw(options, row, section_height) {
   if (row === undefined) {
     row = 0;
+  }
+  if (section_height === undefined) {
+    section_height = 5;
   }
   let width = options.context.canvas.width;
   let height = options.context.canvas.height;
   
   if (row < height) {
   
-    let imageData = drawPortion(options, 0, row, width, 1);
+    let imageData = drawPortion(options, 0, row, width, section_height);
 	
 	options.context.putImageData(imageData, 0, row);
 	
-    requestAnimationFrame(function() {
-      draw(options, row + 1)
-    })
+    setTimeout(function() {
+      draw(options, row + section_height)
+    }, 0)
   }
 }

@@ -69,19 +69,20 @@ function getColor(angle) {
   return [r, g, b]
 }
 
-function draw(options) {
+function drawPortion(options, bound_x, bound_y, bound_width, bound_height) {
   let width = options.context.canvas.width;
   let height = options.context.canvas.height;
-  let imageData = options.context.getImageData(0, 0, width, height);
+  
+  let imageData = options.context.getImageData(bound_x, bound_y, bound_width, bound_height);
   let buf = new ArrayBuffer(imageData.data.length);
   let buf8 = new Uint8ClampedArray(buf);
   let data = new Uint32Array(buf);
-
+  
   let z, c, i, r, g, b;
   let smoothcolor;
-
-  for (let x = 0; x < width; x++) {
-    for (let y = 0; y < height; y++) {
+  
+  for (let x = bound_x; x < bound_x + bound_width; x++) {
+    for (let y = bound_y; y < bound_y + bound_height; y++) {
 
       z = [(x - width / 2) / 100, (y - height / 2) / 100];
       z = multiply(z, 1 / options.zoom);
@@ -115,11 +116,25 @@ function draw(options) {
 
     }
   }
-
   imageData.data.set(buf8);
-
-  if (options.drawtocanvas) {
-    options.context.putImageData(imageData, 0, 0);
-  }
   return imageData;
+}
+
+function draw(options, row) {
+  if (row === undefined) {
+    row = 0;
+  }
+  let width = options.context.canvas.width;
+  let height = options.context.canvas.height;
+  
+  if (row < height) {
+  
+    let imageData = drawPortion(options, 0, row, width, 1);
+	
+	options.context.putImageData(imageData, 0, row);
+	
+    requestAnimationFrame(function() {
+      draw(options, row + 1)
+    })
+  }
 }

@@ -27,12 +27,11 @@ function getOptions() {
 		hueshift: Number(window.hueshift.value),
 		drawblack: window.checkdrawblack.checked,
 		smoothshading: window.checksmooth.checked,
-		drawtocanvas: true,
 	}
 }
 
 function update(e) {
-  draw(getOptions());
+  drawInSections(getOptions());
 }
 
 function flipbook(imgs) {
@@ -49,7 +48,7 @@ function zoomIn(e) {
   let imgs = [];
 	let options = getOptions();
   for (let i = 0; i < 60; i++) {
-    imgs.push(draw(options));
+    imgs.push(drawSection(options, 0, 0, options.canvas.width, options.canvas.height));
     window.zoom.value *= 1.5;
   }
   flipbook(imgs);

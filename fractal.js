@@ -69,7 +69,7 @@ function getColor(angle) {
   return [r, g, b]
 }
 
-function drawPortion(options, bound_x, bound_y, bound_width, bound_height) {
+function drawSection(options, bound_x, bound_y, bound_width, bound_height) {
   let width = options.context.canvas.width;
   let height = options.context.canvas.height;
   
@@ -120,7 +120,7 @@ function drawPortion(options, bound_x, bound_y, bound_width, bound_height) {
   return imageData;
 }
 
-function draw(options, row, section_height) {
+function drawInSections(options, row, section_height) {
   if (row === undefined) {
     row = 0;
   }
@@ -132,12 +132,22 @@ function draw(options, row, section_height) {
   
   if (row < height) {
   
-    let imageData = drawPortion(options, 0, row, width, section_height);
+    let imageData = drawSection(options, 0, row, width, section_height);
 	
 	options.context.putImageData(imageData, 0, row);
 	
     setTimeout(function() {
-      draw(options, row + section_height)
+      drawInSections(options, row + section_height)
     }, 0)
   }
+}
+
+function draw(options) {
+  let width = options.context.canvas.width;
+  let height = options.context.canvas.height;
+  let imageData = drawSection(options, 0, 0, width, height);
+  if (options.drawtocanvas) {
+    options.context.putImageData(imageData, 0, 0);
+  }
+  return imageData
 }
